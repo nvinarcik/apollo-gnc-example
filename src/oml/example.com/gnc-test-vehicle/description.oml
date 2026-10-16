@@ -3,8 +3,7 @@
 description <http://example.com/gnc-test-vehicle/description#> as tv {
     uses <http://purl.org/dc/elements/1.1/> as dc
     uses <http://www.example.com/apollo-cm-gnc/method/vocabulary#> as method
-
-    // Hardware
+    uses <http://www.w3.org/2000/01/rdf-schema#> as rdfs
 
     @dc:description "The TV-1 flight computer."
     instance TVComputer : method:Computer [
@@ -35,9 +34,10 @@ description <http://example.com/gnc-test-vehicle/description#> as tv {
     @dc:description "The TV-1 inertial measurement unit."
     instance TVIMU : method:IMU [
         method:name "TV-1 IMU"
-        method:dependsOn TVComputer
-        method:dependsOn TVStarTracker
+        method:dependsOn TVComputer, TVStarTracker
         method:interfacesWith TVStarTracker
+        method:powerConsumptionWatts 60.0
+        method:poweredBy TVBus
     ]
 
     @dc:description "The star tracker used to align the IMU."
@@ -64,8 +64,6 @@ description <http://example.com/gnc-test-vehicle/description#> as tv {
     instance TVStateVector : method:StateVector [
         method:name "TV-1 State Vector"
     ]
-
-    // Flight programs
 
     @dc:description "Program 01: Navigation, maintaining the state vector from IMU data."
     instance TVP01 : method:StateVectorNavigation [
@@ -117,11 +115,18 @@ description <http://example.com/gnc-test-vehicle/description#> as tv {
     @dc:description "Program 20: Entry, guiding the vehicle through atmospheric entry."
     instance TVP20 : method:Reentry [
         method:name "P20 Entry"
-        method:dependsOn TVComputer
-        method:dependsOn TVP01
-        method:dependsOn TVStateVector
+        method:dependsOn TVComputer, TVP01, TVStateVector
         method:programNumber 20
         method:missionPhase "Entry"
         method:criticality "Critical"
+        method:precedes TVP21
+    ]
+
+    @rdfs:label "P21 Landing"
+    instance TVP21 : method:Routine [
+        method:programNumber 21
+        method:missionPhase "Landing"
+        method:criticality "Critical"
+        method:dependsOn TVComputer, TVIMU
     ]
 }
