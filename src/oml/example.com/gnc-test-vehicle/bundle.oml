@@ -1,0 +1,7 @@
+@dc:title "GNC Test Vehicle Bundle"
+@dc:description "Closes the TV-1 description over the Apollo GNC method."
+description bundle <http://example.com/gnc-test-vehicle/bundle#> as tv-bundle {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://www.example.com/apollo-cm-gnc/method/bundle#>
+    includes <http://example.com/gnc-test-vehicle/description#>
+}

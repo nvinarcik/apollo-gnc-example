@@ -1,0 +1,16 @@
+oml-code:
+  schemaVersion: 1
+
+project:
+  name: "@vinarcik/gnc-test-vehicle-example"
+  version: 0.1.0
+  description: "A fictional GNC test vehicle (TV-1) modeled with the packaged
+    Apollo GNC method"
+
+sources: [ src ]
+
+dependencies:
+  "@vinarcik/apollo-gnc-method": "0.3.2"
+
+defaults:
+  render: -m src/md -b build/web -c src/oml/example.com/gnc-test-vehicle/bundle.oml

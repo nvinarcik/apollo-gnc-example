@@ -1,0 +1,15 @@
+@dc:title "GNC Test Vehicle Codegen Configs"
+@dc:description "Runs the installed Component Impact Report generator on TV-1."
+description <http://example.com/gnc-test-vehicle/codegen#> as configs {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://opencaesar.io/codegen#> as codegen
+    extends <http://www.example.com/apollo-cm-gnc/codegen/impact#> as impact
+
+    instance impact : codegen:Config [
+        codegen:spec impact:ImpactReportSpec
+        codegen:context "http://example.com/gnc-test-vehicle/bundle"
+        codegen:binding [ codegen:key "path" codegen:value "build/docs" ]
+        codegen:binding [ codegen:key "file" codegen:value "TV-1-impact.md" ]
+        codegen:binding [ codegen:key "title" codegen:value "TV-1 Component Impact Report" ]
+    ]
+}

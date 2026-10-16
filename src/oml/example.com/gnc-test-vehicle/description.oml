@@ -1,0 +1,127 @@
+@dc:title "GNC Test Vehicle Description"
+@dc:description "TV-1, a small fictional test vehicle used to demonstrate the Apollo GNC method end to end. All values are illustrative."
+description <http://example.com/gnc-test-vehicle/description#> as tv {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://www.example.com/apollo-cm-gnc/method/vocabulary#> as method
+
+    // Hardware
+
+    @dc:description "The TV-1 flight computer."
+    instance TVComputer : method:Computer [
+        method:name "TV-1 Flight Computer"
+        method:manufacturer "Example Avionics"
+        method:massKg 12.0
+        method:powerConsumptionWatts 30.0
+        method:clockRateHz 1000000.0
+        method:poweredBy TVBus
+        method:contains TVMemory
+    ]
+
+    @dc:description "The flight computer's program memory."
+    instance TVMemory : method:Memory [
+        method:name "TV-1 Memory"
+        method:dependsOn TVComputer
+        method:fixedMemoryWords 16384
+        method:erasableMemoryWords 1024
+        method:powerConsumptionWatts 5.0
+        method:poweredBy TVBus
+        method:contains TVP01
+        method:contains TVP02
+        method:contains TVP10
+        method:contains TVP11
+        method:contains TVP20
+    ]
+
+    @dc:description "The TV-1 inertial measurement unit."
+    instance TVIMU : method:IMU [
+        method:name "TV-1 IMU"
+        method:dependsOn TVComputer
+        method:dependsOn TVStarTracker
+        method:interfacesWith TVStarTracker
+    ]
+
+    @dc:description "The star tracker used to align the IMU."
+    instance TVStarTracker : method:OpticalSubsystem [
+        method:name "TV-1 Star Tracker"
+        method:dependsOn TVComputer
+        method:powerConsumptionWatts 8.0
+        method:poweredBy TVBus
+    ]
+
+    @dc:description "The crew display and keyboard."
+    instance TVDisplay : method:DSKY [
+        method:name "TV-1 Display"
+        method:dependsOn TVComputer
+        method:interfacesWith TVComputer
+    ]
+
+    @dc:description "The main power bus."
+    instance TVBus : method:ElectricalBus [
+        method:name "TV-1 Main Bus"
+    ]
+
+    @dc:description "The vehicle's onboard state vector."
+    instance TVStateVector : method:StateVector [
+        method:name "TV-1 State Vector"
+    ]
+
+    // Flight programs
+
+    @dc:description "Program 01: Navigation, maintaining the state vector from IMU data."
+    instance TVP01 : method:StateVectorNavigation [
+        method:name "P01 Navigation"
+        method:dependsOn TVComputer
+        method:dependsOn TVIMU
+        method:programNumber 1
+        method:missionPhase "All Phases"
+        method:criticality "Critical"
+        method:updates TVStateVector
+    ]
+
+    @dc:description "Program 02: IMU Align, aligning the platform with star tracker sightings."
+    instance TVP02 : method:Alignment [
+        method:name "P02 IMU Align"
+        method:dependsOn TVComputer
+        method:dependsOn TVIMU
+        method:dependsOn TVStarTracker
+        method:programNumber 2
+        method:missionPhase "Prelaunch"
+        method:criticality "Critical"
+        method:calibrates TVIMU
+        method:precedes TVP10
+    ]
+
+    @dc:description "Program 10: Ascent Burn."
+    instance TVP10 : method:PoweredFlight [
+        method:name "P10 Ascent Burn"
+        method:dependsOn TVComputer
+        method:dependsOn TVP01
+        method:dependsOn TVStateVector
+        method:programNumber 10
+        method:missionPhase "Ascent"
+        method:criticality "Critical"
+        method:precedes TVP11
+    ]
+
+    @dc:description "Program 11: Orbit Insertion Burn."
+    instance TVP11 : method:PoweredFlight [
+        method:name "P11 Orbit Insertion"
+        method:dependsOn TVComputer
+        method:dependsOn TVP01
+        method:dependsOn TVStateVector
+        method:programNumber 11
+        method:missionPhase "Orbit Insertion"
+        method:criticality "Critical"
+    ]
+
+    @dc:description "Program 20: Entry, guiding the vehicle through atmospheric entry."
+    instance TVP20 : method:Reentry [
+        method:name "P20 Entry"
+        method:dependsOn TVComputer
+        method:dependsOn TVP01
+        method:dependsOn TVStateVector
+        method:programNumber 20
+        method:missionPhase "Entry"
+        method:criticality "Critical"
+    ]
+}
